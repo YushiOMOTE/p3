@@ -1,0 +1,8 @@
+/target
+/out
+.runtimeconfig.json
+*.log
+functions/lib
+node_modules/
+.firebase/
+.firebaserc
