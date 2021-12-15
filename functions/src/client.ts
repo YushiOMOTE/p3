@@ -39,6 +39,7 @@ export class Client {
   }
 
   parseEvent(event: WebhookEvent): Event | undefined {
+    console.log(event);
     if (event.type !== 'message' || event.message.type !== 'text') {
       return;
     }
