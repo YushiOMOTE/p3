@@ -2,34 +2,25 @@ import { v2 } from '@google-cloud/translate';
 import { Config } from './config';
 import * as morse from 'morse-decoder';
 
-const POLISH = 'pl';
-const CHINESE = 'zh-CN';
-const JAPANESE = 'ja';
-const HINDI = 'hi';
 const ENGLISH = 'en';
-const MALAY = 'ms';
-const BENGALI = 'bn';
 const MORSE = 'morse';
+const LANGS = [
+  'pl', // Polish
+  'zh-CN', // Chinese
+  'ja', // Japanese
+  'hi', // Hindi
+  'ms', // Malay
+  'bn', // Bengali
+  ENGLISH, // English
+  // MORSE, // Morse (disabled)
+];
 
 function isMorse(msg: string): boolean {
   return msg.match(/^[.\-/ ]+$/g) !== null;
 }
 
-function shuffleArray(array: string[]): string[] {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    const temp = array[i];
-    array[i] = array[j];
-    array[j] = temp;
-  }
-  return array;
-}
-
-function remove(array: string[], item: string) {
-  const index = array.indexOf(item);
-  if (index > -1) {
-    array.splice(index, 1);
-  }
+function pickRandom(array: string[]): string {
+  return array[Math.floor(Math.random() * array.length)];
 }
 
 export class Translator {
@@ -43,17 +34,20 @@ export class Translator {
     });
   }
 
-  async translate(
+  async translateOne(
     msg: string,
     source: string,
     target: string,
   ): Promise<string> {
+    // Handle Morse
     if (target === MORSE) {
-      const translate = await this.translate(msg, source, ENGLISH);
+      const translate = await this.translateOne(msg, source, ENGLISH);
       return morse.encode(translate);
     } else if (source == MORSE) {
-      return await this.translate(morse.decode(msg), ENGLISH, target);
+      return await this.translateOne(morse.decode(msg), ENGLISH, target);
     }
+
+    // Handle normal natural languages
     const [translation] = await this.translation.translate(msg, target);
     return translation;
   }
@@ -74,24 +68,21 @@ export class Translator {
     }
   }
 
-  async translateAll(msg: string): Promise<string> {
-    const langs = shuffleArray([
-      POLISH,
-      CHINESE,
-      HINDI,
-      JAPANESE,
-      MALAY,
-      BENGALI,
-      MORSE,
-    ]);
-
+  async translate(msg: string): Promise<string> {
     const src = await this.detect(msg);
 
-    remove(langs, src);
+    if (src === ENGLISH) {
+      // Don't translate from English
+      return '';
+    }
 
+    const exclude = [ENGLISH, src];
+    const nonEn = [...LANGS].filter((i) => !exclude.includes(i));
+
+    // Translate to English + Non-English
     let output = '';
-    for (const lang of [ENGLISH, langs[0]]) {
-      const translation = await this.translate(msg, src, lang);
+    for (const lang of [ENGLISH, pickRandom(nonEn)]) {
+      const translation = await this.translateOne(msg, src, lang);
       output += translation + '\n';
     }
     return output;
