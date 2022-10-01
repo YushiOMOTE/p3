@@ -68,8 +68,11 @@ Commands:
       return;
     }
 
-    const translated = await this.translator.translateAll(msg);
-    await this.reply(event, translated);
+    const translated = await this.translator.translate(msg);
+
+    if (translated) {
+      await this.reply(event, translated);
+    }
   }
 
   async reply(event: Event, msg: string) {
