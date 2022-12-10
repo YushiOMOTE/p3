@@ -4,7 +4,7 @@ A random purpose bot for us.
 
 ## Design
 
-LINE bot with Firebase backend integrated with Google/Yahoo APIs.
+LINE bot with Firebase backend integrated with Google/OpenAI APIs.
 
 ## Setup
 
