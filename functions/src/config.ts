@@ -3,13 +3,13 @@ export interface LineConfig {
   channelAccessToken: string;
 }
 
-export interface YahooConfig {
-  appid: string;
+export interface OpenAIConfig {
+  apikey: string;
 }
 
 export interface Config {
   name: string;
   theme: string;
   line: LineConfig;
-  yahoo: YahooConfig;
+  openai: OpenAIConfig;
 }

@@ -11,8 +11,8 @@ const cfg: Config = {
     channelSecret: functions.config().line.secret,
     channelAccessToken: functions.config().line.token,
   },
-  yahoo: {
-    appid: functions.config().yahoo.appid,
+  openai: {
+    apikey: functions.config().openai.apikey,
   },
 };
 
