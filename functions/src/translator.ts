@@ -40,6 +40,8 @@ export class Translator {
     source: string,
     target: string,
   ): Promise<string> {
+    console.log(`translate: ${msg}, from ${source}, to: ${target}`);
+
     // Handle Morse
     if (target === MORSE) {
       const translate = await this.translateOne(msg, source, ENGLISH);
