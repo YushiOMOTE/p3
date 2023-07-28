@@ -81,11 +81,12 @@ export class Translator {
     const nonEn = [...LANGS].filter((i) => !exclude.includes(i));
 
     // Translate to English + Non-English
-    let output = '';
+    const translated = new Set<String>();
     for (const lang of [ENGLISH, pickRandom(nonEn)]) {
       const translation = await this.translateOne(msg, src, lang);
-      output += translation + '\n';
+      translated.add(translation);
     }
-    return output;
+
+    return Array.from(translated).join('\n');
   }
 }
