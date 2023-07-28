@@ -11,6 +11,7 @@ const LANGS = [
   'hi', // Hindi
   'ms', // Malay
   'bn', // Bengali
+  'id', // Indonesian
   ENGLISH, // English
   // MORSE, // Morse (disabled)
 ];
