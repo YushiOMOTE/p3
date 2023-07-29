@@ -11,6 +11,7 @@ const LANGS = [
   'hi', // Hindi
   'ms', // Malay
   'bn', // Bengali
+  'id', // Indonesian
   ENGLISH, // English
   // MORSE, // Morse (disabled)
 ];
@@ -39,6 +40,8 @@ export class Translator {
     source: string,
     target: string,
   ): Promise<string> {
+    console.log(`translate: ${msg}, from ${source}, to: ${target}`);
+
     // Handle Morse
     if (target === MORSE) {
       const translate = await this.translateOne(msg, source, ENGLISH);
@@ -80,11 +83,12 @@ export class Translator {
     const nonEn = [...LANGS].filter((i) => !exclude.includes(i));
 
     // Translate to English + Non-English
-    let output = '';
+    const translated = new Set<String>();
     for (const lang of [ENGLISH, pickRandom(nonEn)]) {
       const translation = await this.translateOne(msg, src, lang);
-      output += translation + '\n';
+      translated.add(translation);
     }
-    return output;
+
+    return Array.from(translated).join('\n');
   }
 }
